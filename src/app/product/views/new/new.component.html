@@ -1,0 +1,55 @@
+<div class="page-header">
+  <h3 class="page-title">Nuevo Producto</h3>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="productos">Productos</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Nuevo</li>
+    </ol>
+  </nav>
+</div>
+<div class="row">
+  <div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <form [formGroup]="productForm">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="descripcion"
+            />
+          </div>
+          <div class="form-group">
+            <label>Código</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="codProducto"
+            />
+          </div>
+          <div class="form-group">
+            <label>Unidad</label>
+            <input type="text" class="form-control" formControlName="unidad" />
+          </div>
+          <div class="form-group">
+            <label>Monto unitario </label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="mtoValorUnitario"
+            />
+          </div>
+          <button
+            type="button"
+            class="btn btn-gradient-primary mr-2"
+            (click)="onSaveButtonTapped()"
+          >
+            Enviar
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<template #successModalContainer></template>

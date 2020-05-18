@@ -1,0 +1,33 @@
+.title {
+  font-size: 32px;
+  color: white;
+  font-weight: bold;
+  margin-top: 24px;
+}
+
+.back {
+  font-size: 16px;
+  color: #71a202;
+  font-weight: normal;
+}
+
+.page-content {
+  margin-top: 32px;
+}
+
+.list-item-header {
+  color: white;
+}
+
+.list-item-description {
+  color: white;
+}
+
+.rounded-button {
+  border-radius: 50%;
+  background-color: #71a202;
+  font-size: 24px;
+  line-height: 24px;
+  font-weight: bold;
+  color: white;
+}

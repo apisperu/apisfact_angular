@@ -1,0 +1,35 @@
+.title {
+  font-size: 32px;
+  color: white;
+  font-weight: bold;
+  margin-top: 24px;
+}
+
+.back {
+  font-size: 16px;
+  color: #71a202;
+  font-weight: normal;
+}
+
+.page-content {
+  margin-top: 32px;
+}
+
+.label {
+  color: #aaa;
+}
+
+.label-file {
+  color: white;
+  font-size: 18px;
+  margin-left: 16px;
+}
+
+.input {
+  color: white;
+}
+
+.m-y-2 {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
