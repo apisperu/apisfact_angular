@@ -51,7 +51,7 @@ export class NewComponent implements OnInit {
       tipoDoc: [this.documentTypeList[0].code, []],
       numDoc: [null, []],
       rznSocial: [null, []],
-      address: [null, []],
+      direccion: [null, []],
     });
   }
 
@@ -60,9 +60,6 @@ export class NewComponent implements OnInit {
   onSaveButtonTapped() {
     const data = this.clientForm.value;
     data.tipoDoc = this.documentType;
-    data.address = {
-      direccion: data.address,
-    };
     this.presenter.saveClient(data);
   }
 

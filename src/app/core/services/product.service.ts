@@ -1,80 +1,35 @@
 import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IProduct } from '../models/product.model';
+import { Endpoint } from '../utils/endpoint';
 
 @Injectable()
 export class ProductService {
-  constructor(private _http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
   getList(companyRuc: string): Observable<IProduct[]> {
-    const productList = this.getProductList(companyRuc);
-    return of(productList);
-  }
-
-  save(companyRuc: string, data: IProduct): Observable<any> {
-    const productList = this.getProductList(companyRuc);
-    productList.push(data);
-    this.saveProductList(companyRuc, productList);
-    return of({});
-  }
-
-  update(companyRuc: string, data: IProduct): Observable<any> {
-    const productList = this.getProductList(companyRuc);
-    const newProductList = productList.map((item) => {
-      if (item.codProducto === data.codProducto) {
-        item = data;
-      }
-      return {
-        ...item,
-      };
+    return this.http.get<IProduct[]>(Endpoint.products(), {
+      params: {
+        companyRuc,
+      },
     });
-    this.saveProductList(companyRuc, newProductList);
-    return of({});
   }
 
-  delete(companyRuc: string, codProducto: string): Observable<any> {
-    const productList = this.getProductList(companyRuc);
-    const newProductList = productList.filter((item) => {
-      return item.codProducto !== codProducto;
-    });
-    this.saveProductList(companyRuc, newProductList);
-    return of({});
+  save(data: IProduct): Observable<any> {
+    return this.http.post(Endpoint.products(), data);
   }
 
-  getByCode(companyRuc: string, codProducto: string): Observable<any> {
-    const productList: IProduct[] = this.getProductList(companyRuc);
-    return of(productList.find((item) => item.codProducto === codProducto));
+  update(data: IProduct): Observable<any> {
+    return this.http.put(`${Endpoint.products}/${data.id}`, data);
   }
 
-  private getProductList(companyRuc: string): any[] {
-    // const companyDataStateList: ICompanyDataState[] = getString(
-    //   'companyDataStateList'
-    // )
-    //   ? JSON.parse(getString('companyDataStateList'))
-    //   : [];
-
-    // const index = companyDataStateList.findIndex(
-    //   (item) => item.company.ruc === companyRuc
-    // );
-
-    // return index !== -1 ? companyDataStateList[index].productList : [];
-    return [];
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${Endpoint.products}/${id}`);
   }
 
-  private saveProductList(companyRuc: string, productList: IProduct[]) {
-    // const companyDataStateList: ICompanyDataState[] = getString(
-    //   'companyDataStateList'
-    // )
-    //   ? JSON.parse(getString('companyDataStateList'))
-    //   : [];
-    // const index = companyDataStateList.findIndex(
-    //   (item) => item.company.ruc === companyRuc
-    // );
-    // if (index !== -1) {
-    //   companyDataStateList[index].productList = productList;
-    //   setString('companyDataStateList', JSON.stringify(companyDataStateList));
-    // }
+  getById(id: number): Observable<IProduct> {
+    return this.http.get<IProduct>(`${Endpoint.products}/${id}`);
   }
 }

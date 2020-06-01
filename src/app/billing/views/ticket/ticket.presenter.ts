@@ -19,6 +19,9 @@ import { Store } from '@ngxs/store';
 import { CompanyState } from 'src/app/core/store/company.state';
 import { EventEmitter } from 'events';
 import { Emitter, Emittable } from '@ngxs-labs/emitter';
+import { ProductService } from 'src/app/core/services/product.service';
+import { ClientService } from 'src/app/core/services/client.service';
+import { IClient } from 'src/app/core/models/client.model';
 
 const UBL_VERSION = '2.1';
 const IGV_PERCENTAGE = 18;
@@ -34,7 +37,9 @@ export class TicketPresenter {
   constructor(
     private billingService: BillingService,
     private datePipe: DatePipe,
-    private store: Store
+    private store: Store,
+    private productService: ProductService,
+    private clientService: ClientService
   ) {
     this.company = this.store.selectSnapshot(CompanyState.activeCompany);
   }
@@ -44,13 +49,15 @@ export class TicketPresenter {
   }
 
   getClients() {
-    this.view.setClientList(this.store.selectSnapshot(CompanyState.clientList));
+    this.clientService.getList(this.company.ruc).subscribe((data) => {
+      this.view.setClientList(data);
+    });
   }
 
   getProducts() {
-    this.view.setProductList(
-      this.store.selectSnapshot(CompanyState.productList)
-    );
+    this.productService.getList(this.company.ruc).subscribe((data) => {
+      this.view.setProductList(data);
+    });
   }
 
   save(data: IBillingRequest) {
@@ -59,7 +66,6 @@ export class TicketPresenter {
       .subscribe((response: IBillingResponse) => {
         if (response.sunatResponse.success) {
           this.storeBilling(data, response);
-          this.view.onSuccessSaved(response);
         } else {
           this.view.onErrorSaved(response);
         }
@@ -67,6 +73,7 @@ export class TicketPresenter {
   }
 
   buildBillingRequest() {
+    const client: IClient = (this.view.ticketForm.value || {}).client;
     const data: IBillingRequest = this.view.ticketForm.value;
     data.fechaEmision = this.datePipe.transform(
       Date.now(),
@@ -75,7 +82,12 @@ export class TicketPresenter {
     data.tipoDoc = this.view.documentType;
     data.tipoOperacion = '0101';
     data.company = CompanyUtil.buildSimpleCompany(this.company);
-    // data.client = this.view.client;
+    data.client = {
+      ...data.client,
+      address: {
+        direccion: client.direccion,
+      },
+    };
     data.tipoMoneda = this.view.currency;
     data.details = this.view.billingDetail;
     data.mtoOperGravadas = this.view.billingDetail.reduce((acc, value) => {
@@ -105,7 +117,7 @@ export class TicketPresenter {
 
   buildBillingDetailRequest(productExtendedList: IProductExtended[]) {
     return productExtendedList.map((item) => {
-      const subTotal = item.mtoValorUnitario * item.cantidad;
+      const subTotal = parseFloat(`${item.mtoValorUnitario}`) * item.cantidad;
       const totalIgv = (subTotal * IGV_PERCENTAGE) / 100;
       return {
         cantidad: item.cantidad,
@@ -119,7 +131,8 @@ export class TicketPresenter {
         igv: totalIgv,
         tipAfeIgv: TIPO_AFECT_IGV,
         totalImpuestos: totalIgv,
-        mtoPrecioUnitario: item.mtoValorUnitario + totalIgv / item.cantidad,
+        mtoPrecioUnitario:
+          (parseFloat(`${item.mtoValorUnitario}`) + totalIgv) / item.cantidad,
       } as IBillingDetailRequest;
     });
   }
@@ -130,6 +143,8 @@ export class TicketPresenter {
       sunatResponse: response.sunatResponse,
     } as IBilling;
 
-    this.addBilling.emit(billing);
+    this.billingService.storeBilling(billing).subscribe(() => {
+      this.view.onSuccessSaved(response);
+    });
   }
 }

@@ -25,25 +25,21 @@ export class EditPresenter {
   }
 
   updateClient(data: IClient) {
-    this.clientService.update(this.activeCompany.ruc, data).subscribe(() => {
+    this.clientService.update(data).subscribe(() => {
       this.view.onSuccessSave();
     });
   }
 
-  deleteClient(docNumber) {
-    this.clientService
-      .delete(this.activeCompany.ruc, docNumber)
-      .subscribe(() => {
-        this.view.onSuccessDelete();
-      });
+  deleteClient(id: any) {
+    this.clientService.delete(id).subscribe(() => {
+      this.view.onSuccessDelete();
+    });
   }
 
-  getClient(docNumber: string) {
-    this.clientService
-      .getByDocNumner(this.activeCompany.ruc, docNumber)
-      .subscribe((data) => {
-        this.view.setData(data);
-      });
+  getClient(id: any) {
+    this.clientService.getById(id).subscribe((data) => {
+      this.view.setData(data);
+    });
   }
 
   getPersonalDocumentTypeList() {

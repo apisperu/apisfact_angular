@@ -25,26 +25,20 @@ export class EditPresenter {
   }
 
   updateProduct(data: IProduct) {
-    this.productService
-      .update(this.activeCompany.ruc, data)
-      .subscribe((response) => {
-        this.view.onSuccessSave(response);
-      });
+    this.productService.update(data).subscribe((response) => {
+      this.view.onSuccessSave(response);
+    });
   }
 
-  deleteProduct(codProduct) {
-    this.productService
-      .delete(this.activeCompany.ruc, codProduct)
-      .subscribe((response) => {
-        this.view.onSuccessDelete(response);
-      });
+  deleteProduct(id: any) {
+    this.productService.delete(id).subscribe((response) => {
+      this.view.onSuccessDelete(response);
+    });
   }
 
-  getProduct(codProduct: any) {
-    this.productService
-      .getByCode(this.activeCompany.ruc, codProduct)
-      .subscribe((data) => {
-        this.view.setData(data);
-      });
+  getProduct(id: any) {
+    this.productService.getById(id).subscribe((data) => {
+      this.view.setData(data);
+    });
   }
 }

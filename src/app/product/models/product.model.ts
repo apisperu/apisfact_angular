@@ -1,8 +1,10 @@
 export interface IProduct {
+  id: number;
   codProducto: string;
   unidad: string;
   descripcion: string;
   mtoValorUnitario: number;
+  companyRuc: string;
 }
 
 export class Product {

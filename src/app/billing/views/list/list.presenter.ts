@@ -16,9 +16,11 @@ export class ListPresenter {
   }
 
   getBillingList() {
-    this.view.setBillingList(
-      this.store.selectSnapshot(CompanyState.billingList)
-    );
+    const companyRuc = this.store.selectSnapshot(CompanyState.activeCompany)
+      .ruc;
+    this.billingService.getList(companyRuc).subscribe((data) => {
+      this.view.setBillingList(data);
+    });
   }
 
   generatePdf(item: IBilling) {

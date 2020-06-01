@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { IClient } from '../models/client.model';
+import { Endpoint } from '../utils/endpoint';
 
 export interface IItem {
   code: string;
@@ -11,46 +12,30 @@ export interface IItem {
 
 @Injectable()
 export class ClientService {
-  constructor(private _http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
   getList(companyRuc: string): Observable<IClient[]> {
-    const clientList = this.getClientList(companyRuc);
-    return of(clientList);
-  }
-
-  getByDocNumner(companyRuc: string, numDoc: string): Observable<IClient> {
-    const clientList = this.getClientList(companyRuc);
-    return of(clientList.find((item) => item.numDoc === numDoc));
-  }
-
-  save(companyRuc: string, data: IClient): Observable<any> {
-    const clientList = this.getClientList(companyRuc);
-    clientList.push(data);
-    this.saveClientList(companyRuc, clientList);
-    return of({});
-  }
-
-  update(companyRuc: string, data: IClient): Observable<any> {
-    const clientList = this.getClientList(companyRuc);
-    const newClientList = clientList.map((item) => {
-      if (item.numDoc === data.numDoc) {
-        item = data;
-      }
-      return {
-        ...item,
-      };
+    return this.http.get<IClient[]>(Endpoint.clients(), {
+      params: {
+        companyRuc,
+      },
     });
-    this.saveClientList(companyRuc, newClientList);
-    return of({});
   }
 
-  delete(companyRuc: string, numDoc: string): Observable<any> {
-    const clientList = this.getClientList(companyRuc);
-    const newClientList = clientList.filter((item) => {
-      return item.numDoc !== numDoc;
-    });
-    this.saveClientList(companyRuc, newClientList);
-    return of({});
+  getById(id: number): Observable<IClient> {
+    return this.http.get<IClient>(`${Endpoint.clients()}/${id}`);
+  }
+
+  save(data: IClient): Observable<any> {
+    return this.http.post(Endpoint.clients(), data);
+  }
+
+  update(data: IClient): Observable<any> {
+    return this.http.put(`${Endpoint.clients()}/${data.id}`, data);
+  }
+
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${Endpoint.clients()}/${id}`);
   }
 
   getPersonalDocumentTypeList(): Observable<IItem[]> {
@@ -65,35 +50,5 @@ export class ClientService {
       },
     ];
     return of(list);
-  }
-
-  private getClientList(companyRuc: string): IClient[] {
-    // const companyDataStateList: ICompanyDataState[] = getString(
-    //   'companyDataStateList'
-    // )
-    //   ? JSON.parse(getString('companyDataStateList'))
-    //   : [];
-
-    // const index = companyDataStateList.findIndex(
-    //   (item) => item.company.ruc === companyRuc
-    // );
-
-    // return index !== -1 ? companyDataStateList[index].clientList : [];
-    return [];
-  }
-
-  private saveClientList(companyRuc: string, clientList: IClient[]) {
-    // const companyDataStateList: ICompanyDataState[] = getString(
-    //   'companyDataStateList'
-    // )
-    //   ? JSON.parse(getString('companyDataStateList'))
-    //   : [];
-    // const index = companyDataStateList.findIndex(
-    //   (item) => item.company.ruc === companyRuc
-    // );
-    // if (index !== -1) {
-    //   companyDataStateList[index].clientList = clientList;
-    //   setString('companyDataStateList', JSON.stringify(companyDataStateList));
-    // }
   }
 }

@@ -9,8 +9,8 @@ import { IBilling } from '../models/billing-extended.model';
 export interface CompanyStateModel {
   active: boolean;
   company: ICompany;
-  productList: IProduct[];
-  clientList: IClient[];
+  // productList: IProduct[];
+  // clientList: IClient[];
   billingList: IBilling[];
 }
 
@@ -27,15 +27,15 @@ export class CompanyState {
     return state.find((item) => item.active).company;
   }
 
-  @Selector()
-  static clientList(state: CompanyStateModel[]): IClient[] {
-    return state.find((item) => item.active).clientList;
-  }
+  // @Selector()
+  // static clientList(state: CompanyStateModel[]): IClient[] {
+  //   return state.find((item) => item.active).clientList;
+  // }
 
-  @Selector()
-  static productList(state: CompanyStateModel[]): IProduct[] {
-    return state.find((item) => item.active).productList;
-  }
+  // @Selector()
+  // static productList(state: CompanyStateModel[]): IProduct[] {
+  //   return state.find((item) => item.active).productList;
+  // }
 
   @Selector()
   static billingList(state: CompanyStateModel[]): IBilling[] {
@@ -61,8 +61,6 @@ export class CompanyState {
       newState.push({
         active: true,
         billingList: [],
-        clientList: [],
-        productList: [],
         company: payload,
       });
     } else {
@@ -71,27 +69,27 @@ export class CompanyState {
     setState(newState);
   }
 
-  @Receiver()
-  public static addClient(
-    { setState, getState }: StateContext<CompanyStateModel[]>,
-    { payload }: EmitterAction<IClient>
-  ) {
-    const state = getState();
-    const index = state.findIndex((item) => item.active);
-    state[index].clientList.push(payload);
-    setState(state);
-  }
+  // @Receiver()
+  // public static addClient(
+  //   { setState, getState }: StateContext<CompanyStateModel[]>,
+  //   { payload }: EmitterAction<IClient>
+  // ) {
+  //   const state = getState();
+  //   const index = state.findIndex((item) => item.active);
+  //   state[index].clientList.push(payload);
+  //   setState(state);
+  // }
 
-  @Receiver()
-  public static addProduct(
-    { setState, getState }: StateContext<CompanyStateModel[]>,
-    { payload }: EmitterAction<IProduct>
-  ) {
-    const state = getState();
-    const index = state.findIndex((item) => item.active);
-    state[index].productList.push(payload);
-    setState(state);
-  }
+  // @Receiver()
+  // public static addProduct(
+  //   { setState, getState }: StateContext<CompanyStateModel[]>,
+  //   { payload }: EmitterAction<IProduct>
+  // ) {
+  //   const state = getState();
+  //   const index = state.findIndex((item) => item.active);
+  //   state[index].productList.push(payload);
+  //   setState(state);
+  // }
 
   @Receiver()
   public static addBilling(

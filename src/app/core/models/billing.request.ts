@@ -1,4 +1,4 @@
-import { IClient } from './client.model';
+import { IClient, IClientRequest } from './client.model';
 import { ISimpleCompany } from './simple-company.model';
 
 export interface IBillingRequest {
@@ -8,7 +8,7 @@ export interface IBillingRequest {
   correlativo: string;
   fechaEmision: string;
   tipoMoneda: string;
-  client: IClient;
+  client: IClientRequest;
   company: ISimpleCompany;
   mtoOperGravadas: number;
   mtoIGV: number;

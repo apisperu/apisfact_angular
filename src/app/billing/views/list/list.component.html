@@ -26,7 +26,7 @@
               <td>{{ item.serie + '-' + item.correlativo }}</td>
               <td>{{ item.fechaEmision }}</td>
               <td>{{ item.mtoImpVenta }}</td>
-              <td>{{ item.sunatResponse.cdrResponse.description }}</td>
+              <td>{{ item.sunatResponse }}</td>
               <td>
                 <button
                   (click)="generatePdf(item)"

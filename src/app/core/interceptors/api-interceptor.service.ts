@@ -15,8 +15,6 @@ import { Store } from '@ngxs/store';
 import { AuthState } from '../store/auth.state';
 import { Router } from '@angular/router';
 
-const BASE_URL = 'https://facturacion.apisperu.com/api/v1/';
-
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
   constructor(
@@ -39,7 +37,6 @@ export class ApiInterceptor implements HttpInterceptor {
     }
 
     request = request.clone({
-      url: `${BASE_URL}${request.url}`,
       headers: request.headers.set('Accept', 'application/json'),
     });
 
